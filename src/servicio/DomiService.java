@@ -1,8 +1,10 @@
 package servicio;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import modelo.*;
 
 public class DomiService {
@@ -89,12 +91,109 @@ public class DomiService {
 
     public HashSet<String> getBarriosConCobertura() {
         return barriosConCobertura;
-    };
+    }
 
-    public HashMap<String, Double> getDistanciaBarrios() {return distanciaBarrios;};
+    public HashMap<String, Double> getDistanciaBarrios() {
+        return distanciaBarrios;
+    }
 
     public ArrayList<Repartidor> obtenerRepartidores(){
         return this.repartidores;
     }
 
+    // ==========================================
+    // MÉTODOS FALTANTES PARA LAS OPCIONES 1 A 7
+    // ==========================================
+
+    private String validarYNormalizarBarrio(String barrioIngresado) {
+        if (barrioIngresado == null || barrioIngresado.trim().isEmpty()) {
+            throw new IllegalArgumentException("El barrio no puede estar vacío.");
+        }
+        String limpio = barrioIngresado.trim();
+        for (String b : barriosConCobertura) {
+            if (b.equalsIgnoreCase(limpio)) {
+                return b;
+            }
+        }
+        throw new IllegalArgumentException("Sin cobertura en el barrio '" + limpio + "'.");
+    }
+
+    public void registrarCliente(String cedula, String nombre, String telefono, String barrio, String direccion) {
+        if (cedula == null || cedula.trim().isEmpty()) {
+            throw new IllegalArgumentException("La cedula no puede estar vacia");
+        }
+        String cedulaLimpia = cedula.trim();
+        if (clientes.containsKey(cedulaLimpia)) {
+            throw new IllegalArgumentException("Ya existe un cliente con la cedula " + cedulaLimpia + ".");
+        }
+        String barrioValido = validarYNormalizarBarrio(barrio);
+        Cliente nuevo = new Cliente(cedulaLimpia, nombre, telefono, barrioValido, direccion);
+        clientes.put(cedulaLimpia, nuevo);
+    }
+
+    public Collection<Cliente> listarClientes() {
+        return clientes.values();
+    }
+
+    public Cliente buscarClientePorCedula(String cedula) {
+        if (cedula == null || !clientes.containsKey(cedula.trim())) {
+            throw new IllegalArgumentException("No se encontró ningun cliente con cedula: " + cedula);
+        }
+        return clientes.get(cedula.trim());
+    }
+
+    public void editarCliente(String cedula, String nuevoTelefono, String nuevoBarrio, String nuevaDireccion) {
+        Cliente cliente = buscarClientePorCedula(cedula);
+        String barrioValido = validarYNormalizarBarrio(nuevoBarrio);
+
+        Cliente temporal = new Cliente(cliente.getCedula(), cliente.getNombre(), nuevoTelefono, barrioValido, nuevaDireccion);
+
+        cliente.setTelefono(temporal.getTelefono());
+        cliente.setBarrio(temporal.getBarrio());
+        cliente.setDireccion(temporal.getDireccion());
+    }
+
+    public void eliminarCliente(String cedula) {
+        Cliente cliente = buscarClientePorCedula(cedula);
+        clientes.remove(cliente.getCedula());
+    }
+
+    public void registrarRepartidor(String codigo, String nombre, int tipoOpcion) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El codigo no puede estar vacío");
+        }
+        String codigoLimpio = codigo.trim().toUpperCase();
+        for (Repartidor r : repartidores) {
+            if (r.getCodigo().equalsIgnoreCase(codigoLimpio)) {
+                throw new IllegalArgumentException("Ya existe un repartidor con el código " + codigoLimpio + ".");
+            }
+        }
+
+        Repartidor nuevo;
+        switch (tipoOpcion) {
+            case 1 -> nuevo = new Bici(codigoLimpio, nombre, true);
+            case 2 -> nuevo = new Moto(codigoLimpio, nombre, true);
+            case 3 -> nuevo = new Carro(codigoLimpio, nombre, true);
+            default -> throw new IllegalArgumentException("Tipo de vehículo inválido. Elija 1 (Bici), 2 (Moto) o 3 (Carro)");
+        }
+        repartidores.add(nuevo);
+    }
+
+    public List<Repartidor> listarRepartidores() {
+        return repartidores;
+    }
+
+    public Repartidor cambiarDisponibilidad(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Debe ingresar un código de repartidor");
+        }
+        String codigoLimpio = codigo.trim();
+        for (Repartidor r : repartidores) {
+            if (r.getCodigo().equalsIgnoreCase(codigoLimpio)) {
+                r.setDisponible(!r.isDisponible());
+                return r;
+            }
+        }
+        throw new IllegalArgumentException("No existe un repartidor con código: " + codigoLimpio);
+    }
 }
