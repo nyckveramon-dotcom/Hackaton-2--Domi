@@ -196,26 +196,38 @@ public class DomiService {
         throw new IllegalArgumentException("No existe un repartidor con código: " + codigoLimpio);
     }
 
-    public void crearPedido(String cedula, String descripcion, boolean esGrande) {
-        Cliente cliente = buscarClientePorCedula(cedula);
-        double km = distanciaBarrios.get(cliente.getBarrio());
+    public void crearPedido(String cedula, String descripcion, boolean esGrande, boolean llueve){
 
-        System.out.printf("Cotizando pedido para %s · %s (%.1f km)%n",
-                cliente.getNombre(), cliente.getBarrio(), km);
+        Cliente cliente = clientes.get(cedula);
 
+        if(cliente == null){
+            throw new IllegalArgumentException("El cliente no existe");
+        }
+
+        String barrio = cliente.getBarrio();
+        Double km = distanciaBarrios.get(barrio);
+
+        if (km == null){
+            throw new IllegalArgumentException("El barrio no tiene cobertura");
+        }
+
+        //Se inicializan las variables para guardar la mejor cotización
         Repartidor mejorRepartidor = null;
         double mejorCosto = Double.MAX_VALUE;
-        int mejorTiempo = 0;
+        double mejorTiempo = 0;
 
-        for (Repartidor r : repartidores) {
-            if (r.isDisponible() && r.puedeLlevar(km, esGrande)) {
-                double costo = r.calcularCosto(km, esGrande);
-                int tiempo = r.calcularTiempo(km);
+        for (Repartidor r : repartidores){
 
-                System.out.printf("  %s %-15s (%-5s) $%,.0f   %d min%n",
-                        r.getCodigo(), r.getNombre(), r.getClass().getSimpleName(), costo, tiempo);
+            //Cada repartidor puede calcular sus propios valores
+            if (r.isDisponible() && r.puedeLlevar(km, esGrande, llueve)){
+                double costo = r.calcularCosto(km);
+                double tiempo = r.calcularTiempo(km);
 
-                if (costo < mejorCosto) {
+                System.out.println(r.getCodigo() + " " + r.getNombre() +
+                        " (" + r.getClass().getSimpleName() + ") $" + costo + " " + tiempo + "min" );
+
+                //comparación de cotizaciones
+                if (costo < mejorCosto){
                     mejorCosto = costo;
                     mejorTiempo = tiempo;
                     mejorRepartidor = r;
