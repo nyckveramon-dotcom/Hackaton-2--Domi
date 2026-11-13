@@ -45,7 +45,7 @@ public class Cliente {
 
     public void setNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("el nombre no puede estar vacía");
+            throw new IllegalArgumentException("el nombre no puede estar vacío");
         }
         this.nombre = nombre.trim();
     }
