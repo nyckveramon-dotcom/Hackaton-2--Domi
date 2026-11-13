@@ -89,6 +89,12 @@ public class DomiService {
 
     public HashSet<String> getBarriosConCobertura() {
         return barriosConCobertura;
+    };
+
+    public HashMap<String, Double> getDistanciaBarrios() {return distanciaBarrios;};
+
+    public ArrayList<Repartidor> obtenerRepartidores(){
+        return this.repartidores;
     }
 
 }
