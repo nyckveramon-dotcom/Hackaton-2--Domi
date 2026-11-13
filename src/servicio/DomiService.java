@@ -101,9 +101,6 @@ public class DomiService {
         return this.repartidores;
     }
 
-    // ==========================================
-    // MÉTODOS FALTANTES PARA LAS OPCIONES 1 A 7
-    // ==========================================
 
     private String validarYNormalizarBarrio(String barrioIngresado) {
         if (barrioIngresado == null || barrioIngresado.trim().isEmpty()) {
