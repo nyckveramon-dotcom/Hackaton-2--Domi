@@ -1,30 +1,27 @@
+package servicio;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import modelo.*;
 
 public class DomiService {
 
-    //Se inicializan las colecciones
     private HashMap<String, Cliente> clientes;
     private HashSet<String> barriosConCobertura;
     private HashMap<String, Double> distanciaBarrios;
     private ArrayList<Repartidor> repartidores;
-    private ArrayList<> pedidos;
 
-    //Se crea constructor para poder inicializar las colecciones
     public DomiService() {
         this.clientes = new HashMap<>();
         this.barriosConCobertura = new HashSet<>();
         this.distanciaBarrios = new HashMap<>();
         this.repartidores = new ArrayList<>();
-        this.pedidos = new ArrayList<>();
 
         cargarDatosIniciales();
     }
 
     public void cargarDatosIniciales(){
-
-        //HashSet texto (ejem Chapinero)- HashMap clave-valor (ejem Chapinero, 1.5)
 
         barriosConCobertura.add("Chapinero");
         distanciaBarrios.put("Chapinero", 1.5);
@@ -53,10 +50,9 @@ public class DomiService {
         barriosConCobertura.add("Bosa");
         distanciaBarrios.put("Bosa", 18.0);
 
-        //agrega a clientes la clave con que se buscara es decir la cedula y
-        // el objeto que en este caso es un dato quemado//
+
         clientes.put("1020304050", new Cliente(
-               "1020304050",
+                "1020304050",
                 "Laura Gomez",
                 "3001234567",
                 "Teusaquillo",
@@ -67,26 +63,27 @@ public class DomiService {
                 "1030405060",
                 "Mateo Rincon",
                 "3109876543",
-                "Usaquen",
+                "Usaquén",
                 "Carrera 7 # 120-15"
         ));
 
         repartidores.add(new Bici(
-               "R-01",
-                "Camila Torres"
+                "R-01",
+                "Camila Torres",
+                true
         ));
 
         repartidores.add(new Moto(
                 "R-02",
-                "Andres Mejia"
+                "Andres Mejia",
+                true
         ));
 
         repartidores.add(new Carro(
                 "R-03",
-                "Jorge Pardo"
+                "Jorge Pardo",
+                true
         ));
-
-
 
     }
 

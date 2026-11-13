@@ -1,20 +1,23 @@
 package app;
 
+import servicio.DomiService;
+
 import java.util.Scanner;
 
 public class Menu {
-    private Scanner sc = new Scanner(System.in);
-    // private DomiService servicio;   // se activa cuando exista el servicio
+    private final Scanner scanner;
+    private final DomiService service;
 
-    // public Menu(DomiService servicio) {
-    //     this.servicio = servicio;
-    // }
+    public Menu() {
+        this.scanner = new Scanner(System.in);
+        this.service = new DomiService();
+    }
 
     public void iniciar() {
         String opcion = "";
         while (!opcion.equals("0")) {
             mostrarMenu();
-            opcion = sc.nextLine().trim();
+            opcion = scanner.nextLine().trim();
 
             switch (opcion) {
                 case "1":
