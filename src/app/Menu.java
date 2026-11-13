@@ -47,7 +47,7 @@ public class Menu {
                         opcionCambiarDisponibilidad();
                         break;
                     case "8":
-                        System.out.println("Opción 8: crear pedido (pendiente nivel 2)");
+                        opcionCrearPedido();
                         break;
                     case "9":
                         System.out.println("Opción 9: entregar pedido (pendiente nivel 2)");
@@ -181,5 +181,32 @@ public class Menu {
         String codigo = scanner.nextLine();
         Repartidor r = service.cambiarDisponibilidad(codigo);
         System.out.println("Estado actualizado: " + r);
+    }
+
+
+    private void opcionCrearPedido() {
+        System.out.println("══════════════════ Crear Nuevo Pedido ══════════════════");
+        System.out.print("Cédula del cliente: ");
+        String cedula = scanner.nextLine();
+
+        System.out.print("Descripción del pedido: ");
+        String descripcion = scanner.nextLine();
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+
+        System.out.print("¿El pedido es grande? (si/no): ");
+        String respuestaGrande = scanner.nextLine().trim().toLowerCase();
+        boolean esGrande;
+
+        if (respuestaGrande.equals("si") || respuestaGrande.equals("sí")) {
+            esGrande = true;
+        } else if (respuestaGrande.equals("no")) {
+            esGrande = false;
+        } else {
+            throw new IllegalArgumentException("Debe responder exactamente 'si' o 'no'.");
+        }
+
+        service.crearPedido(cedula, descripcion.trim(), esGrande);
     }
 }
