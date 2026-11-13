@@ -12,4 +12,4 @@ Además, cada pedido podría identificar la sede donde fue registrado para facil
 
 
 ###VIDEO EXPLICATIVO 
-https://generationye-my.sharepoint.com/:f:/r/personal/juliana_escarraga_genstudents_org/Documents/HACKATHON%202.%20GRUPO%206?d=w05be07b10dd8448fbe4841be1e73409a&csf=1&web=1&e=oHQqkj      
+https://generationye-my.sharepoint.com/:f:/g/personal/juliana_escarraga_genstudents_org/IgCxB74F2A2PRL5IQb4ec0CaASnGoAv-QNudDiK2zwukJQo      
