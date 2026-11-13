@@ -9,3 +9,7 @@ Cuando cerramos el programa y lo volvimos a abrir, los pedidos registrados duran
 Para compartir la información entre las dos sedes, podríamos utilizar una base de datos centralizada donde se almacenen todos los clientes y pedidos. Así, los dos operadores podrían consultar y registrar información desde diferentes lugares, manteniendo los datos actualizados y evitando que cada sede tenga información independiente.
 
 Además, cada pedido podría identificar la sede donde fue registrado para facilitar su organización y seguimiento.
+
+
+###VIDEO EXPLICATIVO 
+https://generationye-my.sharepoint.com/:f:/r/personal/juliana_escarraga_genstudents_org/Documents/HACKATHON%202.%20GRUPO%206?d=w05be07b10dd8448fbe4841be1e73409a&csf=1&web=1&e=oHQqkj      
