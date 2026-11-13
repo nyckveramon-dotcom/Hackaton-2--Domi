@@ -13,12 +13,14 @@ public class DomiService {
     private HashSet<String> barriosConCobertura;
     private HashMap<String, Double> distanciaBarrios;
     private ArrayList<Repartidor> repartidores;
+    private ArrayList<Pedido> pedidos;
 
     public DomiService() {
         this.clientes = new HashMap<>();
         this.barriosConCobertura = new HashSet<>();
         this.distanciaBarrios = new HashMap<>();
         this.repartidores = new ArrayList<>();
+        this.pedidos = new ArrayList<>();
 
         cargarDatosIniciales();
     }
@@ -193,4 +195,67 @@ public class DomiService {
         }
         throw new IllegalArgumentException("No existe un repartidor con código: " + codigoLimpio);
     }
+
+    public void crearPedido(String cedula, String descripcion, boolean esGrande, boolean llueve){
+
+        Cliente cliente = clientes.get(cedula);
+
+        if(cliente == null){
+            throw new IllegalArgumentException("El cliente no existe");
+        }
+
+        String barrio = cliente.getBarrio();
+        Double km = distanciaBarrios.get(barrio);
+
+        if (km == null){
+            throw new IllegalArgumentException("El barrio no tiene cobertura");
+        }
+
+        //Se inicializan las variables para guardar la mejor cotización
+        Repartidor mejorRepartidor = null;
+        double mejorCosto = Double.MAX_VALUE;
+        double mejorTiempo = 0;
+
+        for (Repartidor r : repartidores){
+
+            //Cada repartidor puede calcular sus propios valores
+            if (r.isDisponible() && r.puedeLlevar(km, esGrande, llueve)){
+                double costo = r.calcularCosto(km);
+                double tiempo = r.calcularTiempo(km);
+
+                System.out.println(r.getCodigo() + " " + r.getNombre() +
+                        " (" + r.getClass().getSimpleName() + ") $" + costo + " " + tiempo + "min" );
+
+                //comparación de cotizaciones
+                if (costo < mejorCosto){
+                    mejorCosto = costo;
+                    mejorTiempo = tiempo;
+                    mejorRepartidor = r;
+                }
+            }
+
+        }
+
+        if (mejorRepartidor == null){
+            throw new IllegalArgumentException("No hay disponibilidad de repartidores");
+        }
+
+        Pedido nuevoPedido = new Pedido(
+                cliente,
+                descripcion,
+                esGrande,
+                km,
+                mejorRepartidor,
+                mejorCosto,
+                mejorTiempo
+        );
+
+
+        pedidos.add(nuevoPedido);
+
+        mejorRepartidor.setDisponible(false);
+
+        System.out.println();
+    }
+
 }

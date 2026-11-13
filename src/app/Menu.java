@@ -207,6 +207,7 @@ public class Menu {
             throw new IllegalArgumentException("Debe responder exactamente 'si' o 'no'.");
         }
 
-        service.crearPedido(cedula, descripcion.trim(), esGrande);
+        boolean llueve = false;
+        service.crearPedido(cedula, descripcion.trim(), esGrande, llueve);
     }
 }
