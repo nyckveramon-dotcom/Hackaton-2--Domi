@@ -233,29 +233,20 @@ public class DomiService {
                     mejorRepartidor = r;
                 }
             }
-
         }
 
-        if (mejorRepartidor == null){
-            throw new IllegalArgumentException("No hay disponibilidad de repartidores");
+        if (mejorRepartidor == null) {
+            throw new IllegalStateException("No hay repartidores disponibles que puedan realizar este envío.");
         }
-
-        Pedido nuevoPedido = new Pedido(
-                cliente,
-                descripcion,
-                esGrande,
-                km,
-                mejorRepartidor,
-                mejorCosto,
-                mejorTiempo
-        );
-
-
-        pedidos.add(nuevoPedido);
 
         mejorRepartidor.setDisponible(false);
+        Pedido nuevoPedido = new Pedido(cliente, mejorRepartidor, descripcion, esGrande, km, mejorCosto, mejorTiempo);
+        pedidos.add(nuevoPedido);
 
-        System.out.println();
+        System.out.printf("✔ Pedido #%d asignado a %s (%s) · %s%n",
+                nuevoPedido.getId(),
+                mejorRepartidor.getNombre(),
+                mejorRepartidor.getClass().getSimpleName(),
+                nuevoPedido.getEstado());
     }
-
 }
