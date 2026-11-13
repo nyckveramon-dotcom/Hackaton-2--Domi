@@ -208,6 +208,6 @@ public class Menu {
         }
 
         boolean llueve = false;
-        service.crearPedido(cedula, descripcion.trim(), esGrande, llueve);
+        service.crearPedido(cedula, descripcion.trim(), esGrande);
     }
 }

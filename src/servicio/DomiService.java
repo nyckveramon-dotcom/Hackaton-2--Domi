@@ -14,6 +14,7 @@ public class DomiService {
     private HashMap<String, Double> distanciaBarrios;
     private ArrayList<Repartidor> repartidores;
     private ArrayList<Pedido> pedidos;
+    private boolean modoLluvia;
 
     public DomiService() {
         this.clientes = new HashMap<>();
@@ -196,7 +197,7 @@ public class DomiService {
         throw new IllegalArgumentException("No existe un repartidor con código: " + codigoLimpio);
     }
 
-    public void crearPedido(String cedula, String descripcion, boolean esGrande, boolean llueve){
+    public void crearPedido(String cedula, String descripcion, boolean esGrande){
 
         Cliente cliente = clientes.get(cedula);
 
@@ -219,7 +220,7 @@ public class DomiService {
         for (Repartidor r : repartidores){
 
             //Cada repartidor puede calcular sus propios valores
-            if (r.isDisponible() && r.puedeLlevar(km, esGrande, llueve)){
+            if (r.isDisponible() && r.puedeLlevar(km, esGrande, modoLluvia)){
                 double costo = r.calcularCosto(km);
                 double tiempo = r.calcularTiempo(km);
 
@@ -240,13 +241,33 @@ public class DomiService {
         }
 
         mejorRepartidor.setDisponible(false);
-        Pedido nuevoPedido = new Pedido(cliente, mejorRepartidor, descripcion, esGrande, km, mejorCosto, mejorTiempo);
+        Pedido nuevoPedido = new Pedido(
+                cliente,
+                descripcion,
+                esGrande,
+                km,
+                mejorRepartidor,
+                mejorCosto,
+                mejorTiempo
+        );
         pedidos.add(nuevoPedido);
 
         System.out.printf("✔ Pedido #%d asignado a %s (%s) · %s%n",
-                nuevoPedido.getId(),
+                nuevoPedido.getNumero(),
                 mejorRepartidor.getNombre(),
                 mejorRepartidor.getClass().getSimpleName(),
                 nuevoPedido.getEstado());
     }
+
+    public void cambiarModoLluvia (){
+        modoLluvia = !modoLluvia;
+    }
+
+    public boolean isModoLluvia(){
+        return modoLluvia;
+    }
+
+
+
+
 }
