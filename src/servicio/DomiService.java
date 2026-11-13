@@ -13,12 +13,14 @@ public class DomiService {
     private HashSet<String> barriosConCobertura;
     private HashMap<String, Double> distanciaBarrios;
     private ArrayList<Repartidor> repartidores;
+    private ArrayList<Pedido> pedidos;
 
     public DomiService() {
         this.clientes = new HashMap<>();
         this.barriosConCobertura = new HashSet<>();
         this.distanciaBarrios = new HashMap<>();
         this.repartidores = new ArrayList<>();
+        this.pedidos = new ArrayList<>();
 
         cargarDatosIniciales();
     }
@@ -192,5 +194,47 @@ public class DomiService {
             }
         }
         throw new IllegalArgumentException("No existe un repartidor con código: " + codigoLimpio);
+    }
+
+    public void crearPedido(String cedula, String descripcion, boolean esGrande) {
+        Cliente cliente = buscarClientePorCedula(cedula);
+        double km = distanciaBarrios.get(cliente.getBarrio());
+
+        System.out.printf("Cotizando pedido para %s · %s (%.1f km)%n",
+                cliente.getNombre(), cliente.getBarrio(), km);
+
+        Repartidor mejorRepartidor = null;
+        double mejorCosto = Double.MAX_VALUE;
+        int mejorTiempo = 0;
+
+        for (Repartidor r : repartidores) {
+            if (r.isDisponible() && r.puedeLlevar(km, esGrande)) {
+                double costo = r.calcularCosto(km, esGrande);
+                int tiempo = r.calcularTiempo(km);
+
+                System.out.printf("  %s %-15s (%-5s) $%,.0f   %d min%n",
+                        r.getCodigo(), r.getNombre(), r.getClass().getSimpleName(), costo, tiempo);
+
+                if (costo < mejorCosto) {
+                    mejorCosto = costo;
+                    mejorTiempo = tiempo;
+                    mejorRepartidor = r;
+                }
+            }
+        }
+
+        if (mejorRepartidor == null) {
+            throw new IllegalStateException("No hay repartidores disponibles que puedan realizar este envío.");
+        }
+
+        mejorRepartidor.setDisponible(false);
+        Pedido nuevoPedido = new Pedido(cliente, mejorRepartidor, descripcion, esGrande, km, mejorCosto, mejorTiempo);
+        pedidos.add(nuevoPedido);
+
+        System.out.printf("✔ Pedido #%d asignado a %s (%s) · %s%n",
+                nuevoPedido.getId(),
+                mejorRepartidor.getNombre(),
+                mejorRepartidor.getClass().getSimpleName(),
+                nuevoPedido.getEstado());
     }
 }
