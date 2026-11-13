@@ -9,6 +9,10 @@ public abstract class Repartidor {
         this.nombre = nombre;
         this.disponible = disponible;
     }
+    //Declaracion de comportamientos abstractos de los hijos
+    public abstract double calcularCosto(double km);
+    public abstract double calcularTiempo(double km);
+    public abstract boolean puedeLlevar(double km, boolean esGrande);
 
     public String getCodigo() {
         return codigo;
@@ -32,5 +36,14 @@ public abstract class Repartidor {
 
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " {" +
+                "codigo='" + codigo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", disponible=" + (disponible ? "Sí" : "No") +
+                '}';
     }
 }
