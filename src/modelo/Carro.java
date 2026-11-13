@@ -1,9 +1,10 @@
 package modelo;
 
 public class Carro extends Repartidor {
-    public  Carro(String codigo, String nombre, boolean disponible){
+    public Carro(String codigo, String nombre, boolean disponible) {
         super(codigo, nombre, disponible);
     }
+
     @Override
     public double calcularCosto(double km) {
         return 5000 + (km * 1200);
@@ -15,7 +16,7 @@ public class Carro extends Repartidor {
     }
 
     @Override
-    public boolean puedeLlevar(double km, boolean esGrande) {
+    public boolean puedeLlevar(double km, boolean esGrande, boolean llueve) {
         return true;
     }
 }
