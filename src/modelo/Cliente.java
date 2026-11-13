@@ -1,13 +1,13 @@
 package modelo;
 
-public class cliente {
+public class Cliente {
     private String cedula;
     private String nombre;
     private String telefono;
     private String barrio;
     private String direccion;
 
-    public cliente(String cedula, String nombre, String telefono, String barrio, String direccion){
+    public Cliente(String cedula, String nombre, String telefono, String barrio, String direccion){
         setCedula(cedula);
         setNombre(nombre);
         setTelefono(telefono);
