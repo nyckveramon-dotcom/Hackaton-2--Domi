@@ -174,6 +174,7 @@ public class DomiService {
             case 1 -> nuevo = new Bici(codigoLimpio, nombre, true);
             case 2 -> nuevo = new Moto(codigoLimpio, nombre, true);
             case 3 -> nuevo = new Carro(codigoLimpio, nombre, true);
+            case 4 -> nuevo = new Dron(codigoLimpio, nombre, true);
             default -> throw new IllegalArgumentException("Tipo de vehículo inválido. Elija 1 (Bici), 2 (Moto) o 3 (Carro)");
         }
         repartidores.add(nuevo);
@@ -221,7 +222,7 @@ public class DomiService {
 
             //Cada repartidor puede calcular sus propios valores
             if (r.isDisponible() && r.puedeLlevar(km, esGrande, modoLluvia)){
-                double costo = r.calcularCosto(km);
+                double costo = r.calcularCosto(km, modoLluvia);
                 double tiempo = r.calcularTiempo(km);
 
                 System.out.println(r.getCodigo() + " " + r.getNombre() +
@@ -267,7 +268,57 @@ public class DomiService {
         return modoLluvia;
     }
 
+    // Buscar pedido por número
+    private Pedido buscarPedidoPorNumero(int numero) {
 
+        for (Pedido p : pedidos) {
+            if (p.getNumero() == numero) {
+                return p;
+            }
+        }
 
+        throw new IllegalArgumentException(
+                "No existe un pedido con el número " + numero
+        );
+    }
 
+    // Entregar pedido
+    public void entregarPedido(int numero) {
+
+        Pedido pedido = buscarPedidoPorNumero(numero);
+
+        if (!pedido.getEstado().equals("EN_CAMINO")) {
+            throw new IllegalStateException(
+                    "Solo se pueden entregar pedidos que estén en camino."
+            );
+        }
+
+        pedido.setEstado("ENTREGADO");
+        pedido.getRepartidorAsignado().setDisponible(true);
+
+        System.out.println("Pedido entregado correctamente.");
+    }
+
+    // Cancelar pedido
+    public void cancelarPedido(int numero) {
+
+        Pedido pedido = buscarPedidoPorNumero(numero);
+
+        if (!pedido.getEstado().equals("EN_CAMINO")) {
+            throw new IllegalStateException(
+                    "Solo se pueden cancelar pedidos que estén en camino."
+            );
+        }
+
+        pedido.setEstado("CANCELADO");
+        pedido.getRepartidorAsignado().setDisponible(true);
+
+        System.out.println("Pedido cancelado correctamente.");
+    }
+
+    // Listar pedidos
+    public List<Pedido> listarPedidos() {
+
+        return new ArrayList<>(pedidos);
+    }
 }
