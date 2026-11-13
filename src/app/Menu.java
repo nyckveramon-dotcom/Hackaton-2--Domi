@@ -3,7 +3,9 @@ package app;
 import modelo.Cliente;
 import modelo.Repartidor;
 import servicio.DomiService;
+import modelo.Pedido;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -50,16 +52,16 @@ public class Menu {
                         opcionCrearPedido();
                         break;
                     case "9":
-                        System.out.println("Opción 9: entregar pedido (pendiente nivel 2)");
+                        entregarPedido();
                         break;
                     case "10":
-                        System.out.println("Opción 10: cancelar pedido (pendiente nivel 2)");
+                        cancelarPedido();
                         break;
                     case "11":
-                        System.out.println("Opción 11: listar pedidos (pendiente nivel 2)");
+                        listarPedidos();
                         break;
                     case "12":
-                        System.out.println("Opción 12: lluvia (pendiente nivel 3)");
+                        opcionCambiarModoLluvia();
                         break;
                     case "13":
                         System.out.println("Opción 13: cierre del día (pendiente nivel 3)");
@@ -155,7 +157,7 @@ public class Menu {
         String codigo = scanner.nextLine();
         System.out.print("Nombre completo: ");
         String nombre = scanner.nextLine();
-        System.out.println("Tipo de vehículo: 1. Bici | 2. Moto | 3. Carro");
+        System.out.println("Tipo de vehículo: 1. Bici | 2. Moto | 3. Carro | 4. Dron");
         System.out.print("Seleccione tipo: ");
         int tipo = Integer.parseInt(scanner.nextLine().trim());
 
@@ -210,4 +212,51 @@ public class Menu {
         boolean llueve = false;
         service.crearPedido(cedula, descripcion.trim(), esGrande);
     }
+
+    private void opcionCambiarModoLluvia() {
+        System.out.println("\n--- Cambiar Modo Lluvia ---");
+        service.cambiarModoLluvia();
+        boolean activo = service.isModoLluvia();
+        if (activo) {
+            System.out.println("¡Modo lluvia ACTIVADO con éxito!");
+        } else {
+            System.out.println("Modo lluvia DESACTIVADO con éxito.");
+        }
+    }
+
+    private void entregarPedido() {
+
+        System.out.println("\n--- Entregar Pedido ---");
+        System.out.print("Ingrese el número del pedido: ");
+
+        int numero = Integer.parseInt(scanner.nextLine());
+
+        service.entregarPedido(numero);
+    }
+    private void cancelarPedido() {
+
+        System.out.println("\n--- Cancelar Pedido ---");
+        System.out.print("Ingrese el número del pedido: ");
+
+        int numero = Integer.parseInt(scanner.nextLine());
+
+        service.cancelarPedido(numero);
+    }
+    private void listarPedidos() {
+
+        System.out.println("\n--- Lista de Pedidos ---");
+
+        List<Pedido> lista = service.listarPedidos();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay pedidos registrados.");
+            return;
+        }
+
+        for (Pedido p : lista) {
+            System.out.println("--------------------------");
+            System.out.println(p);
+        }
+    }
+
 }
